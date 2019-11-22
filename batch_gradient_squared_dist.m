@@ -55,10 +55,10 @@ function grad = gradient_cali_squared_arc_length(Mi, x, x_hat)
 % Input: Mi (d x c); x, x_hat are d-dimensional.
 % Output: grad (d x c).
     [d, c] = size(Mi);
-    mu = 1e-1;
+    mu = 1e-2;
     delta_M = randn(d, c);
     mu_delta_M = mu * delta_M;
-    norm_mu_delta = norm(mu_delta_M(:));
+    norm_delta = norm(delta_M(:));
     Mi_move = Mi + mu_delta_M;
     
     cali_x = solve_ft(Mi, x);
@@ -66,7 +66,7 @@ function grad = gradient_cali_squared_arc_length(Mi, x, x_hat)
     cali_x_move = solve_ft(Mi_move, x);
     cali_x_hat_move = solve_ft(Mi_move, x_hat);
     
-    grad = (sign(delta_M)/norm_mu_delta) .* (arc_length(Mi_move, cali_x_move, cali_x_hat_move)^2 ... 
+    grad = ( delta_M/(mu*norm_delta^2) ) * (arc_length(Mi_move, cali_x_move, cali_x_hat_move)^2 ... 
                                - arc_length(Mi, cali_x, cali_x_hat)^2);
 end
 
